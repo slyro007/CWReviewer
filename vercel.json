@@ -1,9 +1,4 @@
 {
-  "functions": {
-    "api/connectwise/[...path].ts": {
-      "runtime": "nodejs20.x"
-    }
-  },
   "rewrites": [
     {
       "source": "/api/connectwise/(.*)",

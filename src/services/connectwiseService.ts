@@ -22,10 +22,16 @@ class ConnectWiseService {
     
     // Use proxy in development to avoid CORS issues
     // In production, you may need a backend proxy or CORS configuration
+    // Always use proxy in browser environment to avoid CORS
     const isDev = import.meta.env.DEV;
-    const apiBase = isDev 
-      ? '/api/connectwise'  // Use Vite proxy in development
-      : API_CONFIG.baseURL; // Use direct URL in production
+    const isBrowser = typeof window !== 'undefined';
+    
+    // Use proxy if in development OR if in browser (to avoid CORS)
+    // The proxy is configured in vite.config.ts
+    const useProxy = isDev || isBrowser;
+    const apiBase = useProxy
+      ? '/api/connectwise'  // Use Vite proxy to avoid CORS
+      : API_CONFIG.baseURL; // Use direct URL only in Node.js/server environments
     
     // ConnectWise API format: https://api-na.myconnectwise.net/v4_6_release/apis/3.0
     // Build full URLs by combining base URL with endpoint path directly
@@ -44,7 +50,9 @@ class ConnectWiseService {
       publicKey: API_CONFIG.publicKey ? 'SET' : 'MISSING',
       privateKey: API_CONFIG.privateKey ? 'SET' : 'MISSING',
       authFormat: 'companyId+publicKey:privateKey',
-      usingProxy: isDev,
+      usingProxy: useProxy,
+      isDev: isDev,
+      isBrowser: isBrowser,
     });
   }
 
@@ -59,6 +67,12 @@ class ConnectWiseService {
     // Build full URL: baseURL + endpoint
     const fullURL = `${this.baseURL}${endpoint}`;
     
+    console.log(`Making request to: ${fullURL}`);
+    console.log('Request headers:', {
+      ...this.headers,
+      Authorization: 'Basic [REDACTED]',
+    });
+    
     try {
       const response = await axios.get<T[]>(fullURL, {
         ...config,
@@ -66,18 +80,28 @@ class ConnectWiseService {
           ...this.headers,
           ...config?.headers,
         },
+        timeout: 30000, // 30 second timeout
       });
+      console.log(`✅ Success: ${fullURL} - Status: ${response.status}`);
       return response.data || [];
     } catch (error: any) {
-      console.error(`Error fetching ${fullURL}:`, error);
+      console.error(`❌ Error fetching ${fullURL}:`, error);
       if (error.response) {
         console.error('Response status:', error.response.status);
         console.error('Response data:', error.response.data);
+        console.error('Response headers:', error.response.headers);
         console.error('Request URL:', fullURL);
       } else if (error.request) {
-        console.error('No response received:', error.request);
+        console.error('No response received - Network Error');
+        console.error('Request details:', {
+          url: fullURL,
+          method: 'GET',
+          headers: this.headers,
+        });
+        console.error('This might be a CORS issue or the proxy is not working.');
       } else {
         console.error('Error setting up request:', error.message);
+        console.error('Error code:', error.code);
       }
       throw error;
     }

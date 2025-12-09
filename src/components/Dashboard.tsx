@@ -68,12 +68,19 @@ const Dashboard: React.FC = () => {
         statusText: err?.response?.statusText,
         data: err?.response?.data,
         message: err?.message,
+        code: err?.code,
+        request: err?.request,
       });
       
-      if (errorMessage.includes('Cannot route') || errorMessage.includes('company is invalid')) {
+      // Check for network/CORS errors
+      if (err?.code === 'ERR_NETWORK' || err?.message?.includes('Network Error') || err?.message?.includes('Failed to fetch')) {
+        setError('Network Error: Unable to connect to ConnectWise API. This may be a CORS issue. Please ensure the dev server is running and the proxy is configured correctly. Check the browser console for more details.');
+      } else if (errorMessage.includes('Cannot route') || errorMessage.includes('company is invalid')) {
         setError('Company ID format may be incorrect. Please verify the company identifier in ConnectWise Manage matches exactly (case-sensitive).');
       } else if (err?.response?.status === 401) {
         setError('Authentication failed. Please verify your API keys (Public Key and Private Key) are correct.');
+      } else if (err?.response?.status === 403) {
+        setError('Permission denied. The API member may not have permission to access system members. Please check the security role permissions in ConnectWise.');
       } else {
         setError(`Failed to load employees: ${errorMessage}. Please check your API credentials and company ID.`);
       }

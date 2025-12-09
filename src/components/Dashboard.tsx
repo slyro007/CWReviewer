@@ -34,17 +34,49 @@ const Dashboard: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Test API connection on mount
+    if (import.meta.env.DEV) {
+      import('../utils/testConnectWiseAPI').then(({ testConnectWiseAPI }) => {
+        testConnectWiseAPI();
+      });
+    }
     loadMembers();
   }, []);
 
   const loadMembers = async () => {
     try {
       setLoading(true);
+      setError(null);
+      
+      // Try to discover company info first
+      try {
+        const companyInfo = await connectwiseService.discoverCompanyInfo();
+        if (companyInfo) {
+          console.log('Company Info:', companyInfo);
+        }
+      } catch (e) {
+        console.log('Could not get company info:', e);
+      }
+      
       const data = await connectwiseService.getMembers();
       setMembers(data);
-    } catch (err) {
-      setError('Failed to load employees. Please check your API credentials.');
+    } catch (err: any) {
+      const errorMessage = err?.response?.data || err?.message || 'Unknown error';
       console.error('Error loading members:', err);
+      console.error('Full error details:', {
+        status: err?.response?.status,
+        statusText: err?.response?.statusText,
+        data: err?.response?.data,
+        message: err?.message,
+      });
+      
+      if (errorMessage.includes('Cannot route') || errorMessage.includes('company is invalid')) {
+        setError('Company ID format may be incorrect. Please verify the company identifier in ConnectWise Manage matches exactly (case-sensitive).');
+      } else if (err?.response?.status === 401) {
+        setError('Authentication failed. Please verify your API keys (Public Key and Private Key) are correct.');
+      } else {
+        setError(`Failed to load employees: ${errorMessage}. Please check your API credentials and company ID.`);
+      }
     } finally {
       setLoading(false);
     }

@@ -1,6 +1,6 @@
 export const API_CONFIG = {
-  baseURL: import.meta.env.VITE_CW_BASE_URL || 'https://na.myconnectwise.net',
-  companyId: import.meta.env.VITE_CW_COMPANY_ID || 'wolfflogics',
+  baseURL: import.meta.env.VITE_CW_BASE_URL || 'https://api-na.myconnectwise.net',
+  companyId: import.meta.env.VITE_CW_COMPANY_ID || 'WolffLogics',
   clientId: import.meta.env.VITE_CW_CLIENT_ID || '',
   publicKey: import.meta.env.VITE_CW_PUBLIC_KEY || '',
   privateKey: import.meta.env.VITE_CW_PRIVATE_KEY || '',

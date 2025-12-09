@@ -7,16 +7,38 @@ export default async function handler(
   req: VercelRequest,
   res: VercelResponse
 ) {
+  // Debug logging
+  console.log('=== Vercel Serverless Function Called ===');
+  console.log('Method:', req.method);
+  console.log('URL:', req.url);
+  console.log('Query:', JSON.stringify(req.query));
+  console.log('Headers:', JSON.stringify(req.headers));
+
   // Only allow GET requests for now (we can add POST/PUT/DELETE later if needed)
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   // Get the path from the URL (Vercel catch-all route)
-  // The path already includes /v4_6_release/apis/3.0/... from the service
-  const path = Array.isArray(req.query.path) 
-    ? req.query.path.join('/') 
-    : req.query.path || '';
+  // Vercel's catch-all route stores segments in req.query.path as an array
+  let path = '';
+  
+  if (req.query.path) {
+    if (Array.isArray(req.query.path)) {
+      path = req.query.path.join('/');
+    } else {
+      path = req.query.path as string;
+    }
+  }
+  
+  // Alternative: Extract from URL if query.path is empty
+  if (!path && req.url) {
+    // Remove /api/connectwise prefix and query string
+    const urlPath = req.url.split('?')[0];
+    path = urlPath.replace(/^\/api\/connectwise\/?/, '');
+  }
+  
+  console.log('Extracted path:', path);
 
   // Build the full ConnectWise API URL
   // The path from the service already includes /v4_6_release/apis/3.0/endpoint
@@ -37,6 +59,8 @@ export default async function handler(
   
   const queryString = queryParams.toString();
   const urlWithQuery = queryString ? `${baseURL}${apiPath}?${queryString}` : `${baseURL}${apiPath}`;
+  
+  console.log('Proxying to ConnectWise:', urlWithQuery);
 
   // Create Basic Auth header
   const companyId = process.env.VITE_CW_COMPANY_ID || 'WolffLogics';

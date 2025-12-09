@@ -1,10 +1,4 @@
 {
-  "rewrites": [
-    {
-      "source": "/api/connectwise/(.*)",
-      "destination": "/api/connectwise/$1"
-    }
-  ],
   "headers": [
     {
       "source": "/api/connectwise/(.*)",

@@ -1,5 +1,4 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { MessageSquare, Copy, Sparkles } from 'lucide-react';
 import type { EmployeeMetrics } from '../types';
 import { aiService } from '../services/aiService';
@@ -13,11 +12,9 @@ const FeedbackHelper: React.FC<FeedbackHelperProps> = ({ metrics }) => {
   const [aiCompanyFeedback, setAiCompanyFeedback] = useState<string | null>(null);
   const [aiLeadershipFeedback, setAiLeadershipFeedback] = useState<string | null>(null);
   const [aiTeamFeedback, setAiTeamFeedback] = useState<string | null>(null);
-  const [loadingAI, setLoadingAI] = useState<Record<string, boolean>>({});
   const [useAI, setUseAI] = useState(AI_CONFIG.enabled);
 
   const loadAIFeedback = async (type: 'company' | 'leadership' | 'team') => {
-    setLoadingAI((prev) => ({ ...prev, [type]: true }));
     try {
       const feedback = await aiService.generateFeedback(type, metrics);
       if (feedback) {
@@ -27,8 +24,6 @@ const FeedbackHelper: React.FC<FeedbackHelperProps> = ({ metrics }) => {
       }
     } catch (error) {
       console.error(`Failed to load AI ${type} feedback:`, error);
-    } finally {
-      setLoadingAI((prev) => ({ ...prev, [type]: false }));
     }
   };
 

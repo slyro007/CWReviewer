@@ -228,7 +228,7 @@ const ComparisonView: React.FC<ComparisonViewProps> = ({ memberIds }) => {
               </tr>
             </thead>
             <tbody>
-              {comparisonData.employees.map((emp, index) => {
+              {comparisonData.employees.map((emp) => {
                 const hoursDiff = emp.totalHours - comparisonData.comparisonMetrics.averageHours;
                 const projectsDiff = emp.totalProjects - comparisonData.comparisonMetrics.averageProjects;
                 const qualityDiff = emp.averageNoteQuality - comparisonData.comparisonMetrics.averageNoteQuality;

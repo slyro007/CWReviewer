@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Star, TrendingUp, TrendingDown, Award, AlertCircle } from 'lucide-react';
+import { Star, TrendingUp, Award, AlertCircle } from 'lucide-react';
 import type { EmployeeMetrics } from '../types';
 import { findHighlights } from '../utils/analyticsHelpers';
 

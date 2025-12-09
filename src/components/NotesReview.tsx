@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FileText, Star, Filter, Search } from 'lucide-react';
+import { FileText, Star, Search } from 'lucide-react';
 import { connectwiseService } from '../services/connectwiseService';
 import { calculateNoteQuality, getQualityLabel, getQualityColor } from '../services/noteQualityService';
 import type { EmployeeMetrics, ConnectWiseNote, NoteQualityScore } from '../types';

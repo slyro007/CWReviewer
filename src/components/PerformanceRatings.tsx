@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Star, CheckCircle, Sparkles } from 'lucide-react';
+import { CheckCircle, Sparkles } from 'lucide-react';
 import type { EmployeeMetrics, PerformanceRating } from '../types';
 import { aiService } from '../services/aiService';
 import { AI_CONFIG } from '../config/api';
@@ -136,13 +136,9 @@ const PerformanceRatings: React.FC<PerformanceRatingsProps> = ({ metrics }) => {
     const careerRating: PerformanceRating = {
       criterion: 'Career Development',
       rating:
-        careerScore === 4
-          ? 'Exceeds Expectations'
-          : careerScore === 3
+        careerScore === 3
           ? 'Good'
-          : careerScore === 2
-          ? 'Meets Expectations'
-          : 'Needs Work',
+          : 'Meets Expectations',
       evidence: [
         'Shows interest in expanding skills and knowledge',
         `Diverse project experience (${metrics.totalProjects} projects)`,
@@ -156,13 +152,9 @@ const PerformanceRatings: React.FC<PerformanceRatingsProps> = ({ metrics }) => {
     const improvementRating: PerformanceRating = {
       criterion: 'Continuous Improvement',
       rating:
-        improvementScore === 4
-          ? 'Exceeds Expectations'
-          : improvementScore === 3
+        improvementScore === 3
           ? 'Good'
-          : improvementScore === 2
-          ? 'Meets Expectations'
-          : 'Needs Work',
+          : 'Meets Expectations',
       evidence: [
         'Seeks to improve processes and documentation',
         metrics.averageNoteQuality > 70

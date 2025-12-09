@@ -20,9 +20,16 @@ class ConnectWiseService {
     // This is the correct format based on working implementation
     this.authString = btoa(`${API_CONFIG.companyId}+${API_CONFIG.publicKey}:${API_CONFIG.privateKey}`);
     
+    // Use proxy in development to avoid CORS issues
+    // In production, you may need a backend proxy or CORS configuration
+    const isDev = import.meta.env.DEV;
+    const apiBase = isDev 
+      ? '/api/connectwise'  // Use Vite proxy in development
+      : API_CONFIG.baseURL; // Use direct URL in production
+    
     // ConnectWise API format: https://api-na.myconnectwise.net/v4_6_release/apis/3.0
     // Build full URLs by combining base URL with endpoint path directly
-    this.baseURL = `${API_CONFIG.baseURL}/v4_6_release/apis/3.0`;
+    this.baseURL = `${apiBase}/v4_6_release/apis/3.0`;
     
     this.headers = {
       'Content-Type': 'application/json',
@@ -37,6 +44,7 @@ class ConnectWiseService {
       publicKey: API_CONFIG.publicKey ? 'SET' : 'MISSING',
       privateKey: API_CONFIG.privateKey ? 'SET' : 'MISSING',
       authFormat: 'companyId+publicKey:privateKey',
+      usingProxy: isDev,
     });
   }
 

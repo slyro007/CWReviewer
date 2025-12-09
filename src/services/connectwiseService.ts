@@ -14,14 +14,26 @@ class ConnectWiseService {
 
   constructor() {
     // ConnectWise Manage API v3 uses Basic Auth with publicKey:privateKey
+    // Format: Basic base64(publicKey:privateKey)
     const authString = btoa(`${API_CONFIG.publicKey}:${API_CONFIG.privateKey}`);
     
+    // ConnectWise API format: https://na.myconnectwise.net/v4_6_release/apis/3.0
+    const baseURL = `${API_CONFIG.baseURL}/v4_6_release/apis/3.0`;
+    
+    console.log('ConnectWise API Config:', {
+      baseURL,
+      companyId: API_CONFIG.companyId,
+      clientId: API_CONFIG.clientId ? `${API_CONFIG.clientId.substring(0, 8)}...` : 'MISSING',
+      publicKey: API_CONFIG.publicKey ? 'SET' : 'MISSING',
+      privateKey: API_CONFIG.privateKey ? 'SET' : 'MISSING',
+    });
+    
     this.api = axios.create({
-      baseURL: `${API_CONFIG.baseURL}/v${API_CONFIG.apiVersion.replace('.', '_')}/apis/3.0`,
+      baseURL,
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Basic ${authString}`,
-        'clientId': API_CONFIG.clientId,
+        'clientId': API_CONFIG.clientId, // clientId as header (not in URL)
       },
     });
 
@@ -44,8 +56,19 @@ class ConnectWiseService {
     try {
       const response = await this.api.get<T[]>(endpoint, config);
       return response.data || [];
-    } catch (error) {
+    } catch (error: any) {
       console.error(`Error fetching ${endpoint}:`, error);
+      if (error.response) {
+        console.error('Response status:', error.response.status);
+        console.error('Response headers:', error.response.headers);
+        console.error('Response data:', error.response.data);
+        console.error('Request URL:', error.config?.url);
+        console.error('Request headers:', error.config?.headers);
+      } else if (error.request) {
+        console.error('No response received:', error.request);
+      } else {
+        console.error('Error setting up request:', error.message);
+      }
       throw error;
     }
   }

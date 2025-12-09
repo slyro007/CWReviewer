@@ -14,6 +14,14 @@ export default async function handler(
   console.log('Query:', JSON.stringify(req.query));
   console.log('Headers:', JSON.stringify(req.headers));
 
+  // Handle CORS preflight requests
+  if (req.method === 'OPTIONS') {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, clientId');
+    return res.status(200).end();
+  }
+
   // Only allow GET requests for now (we can add POST/PUT/DELETE later if needed)
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });

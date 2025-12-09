@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Users, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { Users } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { connectwiseService } from '../services/connectwiseService';
 import { calculateEmployeeMetrics, calculateComparisonMetrics } from '../utils/analyticsHelpers';
 import type { EmployeeMetrics, ComparisonData } from '../types';

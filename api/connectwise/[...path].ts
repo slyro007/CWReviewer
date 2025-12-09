@@ -13,13 +13,15 @@ export default async function handler(
   }
 
   // Get the path from the URL (Vercel catch-all route)
+  // The path already includes /v4_6_release/apis/3.0/... from the service
   const path = Array.isArray(req.query.path) 
     ? req.query.path.join('/') 
     : req.query.path || '';
 
   // Build the full ConnectWise API URL
+  // The path from the service already includes /v4_6_release/apis/3.0/endpoint
   const baseURL = process.env.VITE_CW_BASE_URL || 'https://api-na.myconnectwise.net';
-  const apiPath = `/v4_6_release/apis/3.0/${path}`;
+  const apiPath = path.startsWith('/') ? path : `/${path}`;
   
   // Reconstruct query parameters (excluding 'path' which is the route parameter)
   const queryParams = new URLSearchParams();

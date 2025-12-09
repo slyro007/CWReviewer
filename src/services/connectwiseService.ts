@@ -49,7 +49,7 @@ class ConnectWiseService {
       publicKey: API_CONFIG.publicKey ? 'SET' : 'MISSING',
       privateKey: API_CONFIG.privateKey ? 'SET' : 'MISSING',
       authFormat: 'companyId+publicKey:privateKey',
-      usingProxy: useProxy,
+      usingProxy: isBrowser,
       isDev: isDev,
       isBrowser: isBrowser,
     });

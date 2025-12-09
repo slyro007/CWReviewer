@@ -20,17 +20,16 @@ class ConnectWiseService {
     // This is the correct format based on working implementation
     this.authString = btoa(`${API_CONFIG.companyId}+${API_CONFIG.publicKey}:${API_CONFIG.privateKey}`);
     
-    // Use proxy in development to avoid CORS issues
-    // In production, you may need a backend proxy or CORS configuration
-    // Always use proxy in browser environment to avoid CORS
+    // Use proxy to avoid CORS issues
+    // In development: Vite proxy (vite.config.ts)
+    // In production: Vercel serverless function (api/connectwise/[...path].ts)
     const isDev = import.meta.env.DEV;
     const isBrowser = typeof window !== 'undefined';
     
-    // Use proxy if in development OR if in browser (to avoid CORS)
-    // The proxy is configured in vite.config.ts
-    const useProxy = isDev || isBrowser;
-    const apiBase = useProxy
-      ? '/api/connectwise'  // Use Vite proxy to avoid CORS
+    // Always use proxy path in browser to avoid CORS
+    // The proxy will route through Vite dev server (dev) or Vercel function (production)
+    const apiBase = isBrowser
+      ? '/api/connectwise'  // Use proxy (Vite dev server or Vercel function)
       : API_CONFIG.baseURL; // Use direct URL only in Node.js/server environments
     
     // ConnectWise API format: https://api-na.myconnectwise.net/v4_6_release/apis/3.0

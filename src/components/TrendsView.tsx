@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 import type { EmployeeMetrics } from '../types';
-import { groupByMonth } from '../utils/dateHelpers';
 
 interface TrendsViewProps {
   metrics: EmployeeMetrics;

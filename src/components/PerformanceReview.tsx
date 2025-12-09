@@ -1,7 +1,7 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { FileText, Download, Star } from 'lucide-react';
-import type { EmployeeMetrics, PerformanceRating } from '../types';
+import { FileText, Star } from 'lucide-react';
+import type { EmployeeMetrics } from '../types';
 import PerformanceRatings from './PerformanceRatings';
 import AccomplishmentsGenerator from './AccomplishmentsGenerator';
 import GoalsGenerator from './GoalsGenerator';

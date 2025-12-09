@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Download, FileText, FileSpreadsheet, File, Code } from 'lucide-react';
 import jsPDF from 'jspdf';
 import type { EmployeeMetrics, ExportOptions } from '../types';
-import { formatDate, formatDateTime } from '../utils/dateHelpers';
+import { formatDate } from '../utils/dateHelpers';
 
 interface WorkExportProps {
   metrics: EmployeeMetrics;
@@ -85,7 +85,7 @@ const WorkExport: React.FC<WorkExportProps> = ({ metrics }) => {
       yPos += 10;
 
       doc.setFontSize(10);
-      metrics.timeEntries.slice(0, 50).forEach((entry, index) => {
+      metrics.timeEntries.slice(0, 50).forEach((entry) => {
         if (yPos > 270) {
           doc.addPage();
           yPos = 20;

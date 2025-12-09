@@ -177,13 +177,9 @@ const PerformanceRatings: React.FC<PerformanceRatingsProps> = ({ metrics }) => {
     const attendanceRating: PerformanceRating = {
       criterion: 'Attendance',
       rating:
-        attendanceScore === 4
-          ? 'Exceeds Expectations'
-          : attendanceScore === 3
+        attendanceScore === 3
           ? 'Good'
-          : attendanceScore === 2
-          ? 'Meets Expectations'
-          : 'Needs Work',
+          : 'Meets Expectations',
       evidence: [
         `Consistent time tracking with ${metrics.timeEntries.length} entries`,
         'Reliable work schedule',
@@ -202,6 +198,8 @@ const PerformanceRatings: React.FC<PerformanceRatingsProps> = ({ metrics }) => {
       attendanceRating,
     ];
   }, [metrics]);
+
+  const ratings = useAI && aiRatings && aiRatings.length > 0 ? aiRatings : defaultRatings;
 
   const getRatingColor = (rating: string) => {
     switch (rating) {
@@ -253,7 +251,7 @@ const PerformanceRatings: React.FC<PerformanceRatingsProps> = ({ metrics }) => {
       </div>
 
       <div className="space-y-4">
-        {ratings.map((rating, index) => (
+        {ratings.map((rating: PerformanceRating, index: number) => (
           <motion.div
             key={rating.criterion}
             initial={{ opacity: 0, y: 20 }}
@@ -320,7 +318,7 @@ const PerformanceRatings: React.FC<PerformanceRatingsProps> = ({ metrics }) => {
             <div className="mt-4 pt-4 border-t border-white/10">
               <div className="text-sm font-semibold text-cyan-400 mb-2">Supporting Evidence:</div>
               <ul className="space-y-1">
-                {rating.evidence.map((evidence, idx) => (
+                {rating.evidence.map((evidence: string, idx: number) => (
                   <li key={idx} className="flex items-start gap-2 text-sm text-gray-300">
                     <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
                     <span>{evidence}</span>

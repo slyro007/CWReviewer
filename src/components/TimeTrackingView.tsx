@@ -177,7 +177,7 @@ const TimeTrackingView: React.FC<TimeTrackingViewProps> = ({ metrics }) => {
                 fill="#8884d8"
                 dataKey="hours"
               >
-                {timeByTicket.slice(0, 5).map((entry, index) => (
+                {timeByTicket.slice(0, 5).map((_, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>

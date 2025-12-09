@@ -11,7 +11,6 @@ import type {
 
 class ConnectWiseService {
   private api: AxiosInstance;
-  private authToken: string | null = null;
 
   constructor() {
     // ConnectWise Manage API v3 uses Basic Auth with publicKey:privateKey

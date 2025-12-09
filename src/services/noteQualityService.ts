@@ -22,7 +22,6 @@ export function calculateNoteQuality(note: ConnectWiseNote): NoteQualityScore {
   const text = note.text || '';
   const words = text.split(/\s+/).filter((w) => w.length > 0);
   const wordCount = words.length;
-  const charCount = text.length;
 
   // Length Score (0-25 points)
   // Optimal length: 50-200 words
